@@ -1,0 +1,55 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: telemetry-incident-dashboard
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/telemetry}
+    username: ${DB_USER:telemetry}
+    password: ${DB_PASSWORD:telemetry}
+    hikari:
+      maximum-pool-size: 20
+      connection-timeout: 5000
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none   # schema is owned by docker/init.sql
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    consumer:
+      group-id: telemetry-engine
+      auto-offset-reset: latest
+      enable-auto-commit: true
+      max-poll-records: 500
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+telemetry:
+  topic: app-logs
+  partitions: 3
+  concurrency: 3                 # consumer threads (virtual), <= partitions
+  window: 60s                    # sliding anomaly window per service
+  error-threshold: 10            # errors inside the window that trigger analysis
+  cooldown: 120s                 # min gap between analyses per service
+  max-buffered-events: 200
+  similarity-threshold: 0.90     # cosine similarity needed for a cache hit
+  allowed-origins: http://localhost:5173,http://localhost:3000
+
+langchain4j:
+  open-ai:
+    chat-model:
+      api-key: ${OPENAI_API_KEY:demo}
+      model-name: ${OPENAI_CHAT_MODEL:gpt-4o-mini}
+      temperature: 0.1
+      max-tokens: 400
+      timeout: 30s
+      max-retries: 2
+    embedding-model:
+      api-key: ${OPENAI_API_KEY:demo}
+      model-name: ${OPENAI_EMBEDDING_MODEL:text-embedding-3-small}   # 1536 dims, matches docker/init.sql
+      timeout: 15s
+      max-retries: 2
