@@ -28,7 +28,25 @@ mvn spring-boot:run
 scripts/send-sample-logs.sh                # replays sample-data/*.ndjson into Kafka
 ```
 `sample-data/`: `01` normal traffic (300 lines), `02` DB-pool-timeout burst on `orders`, `03` the same failure
-on `inventory` (different service, shows a semantic hit), `04` NPE burst on `payments`, `05` malformed lines.
+on `inventory` (different service, shows a semantic hit), `04` NPE burst on `payments`, `05` malformed lines,
+`06` out-of-memory burst on `search`, `07` upstream 502s on `gateway`, `08` JWT failures on `auth`,
+`09` six errors plus warnings that must **not** raise an incident (below threshold).
+
+## Dashboard (`dashboard/`)
+A small React + Vite app with two modes:
+- **Demo** (default): a browser-side simulation of the same rules (10 errors in a window raises an incident,
+  then exact cache, similar cache, or LLM). The diagnoses are hand-written, and the page says so. This is the
+  mode to host: `Play the story` shows an LLM call, a below-threshold non-event, a similar-error cache hit and an
+  exact cache hit in about a minute.
+- **Live backend**: connects to the Spring Boot service over STOMP (`/ws`) and shows real logs, incidents and metrics.
+  For a page served from another origin, add that origin to `telemetry.allowed-origins`. An `https` page can only
+  reach an `https` backend.
+
+```bash
+cd dashboard && npm install && npm run dev      # http://localhost:5173
+```
+Deploy on Vercel: import the GitHub repo, set **Root Directory** to `dashboard`. Vite is detected automatically
+(build `npm run build`, output `dist`). The backend does not run on Vercel, so the hosted link is the demo mode.
 
 ## Sample input
 One Kafka message (the burst in `02-db-timeout-burst.ndjson` is 15 of these):

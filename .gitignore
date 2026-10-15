@@ -1,2 +1,4 @@
 target/
 app.log
+node_modules/
+dist/

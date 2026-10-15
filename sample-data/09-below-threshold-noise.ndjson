@@ -1,0 +1,12 @@
+{"service":"orders","level":"ERROR","message":"Coupon 1 rejected: expired","stackTrace":""}
+{"service":"orders","level":"WARN","message":"Slow query 840ms on orders_by_user"}
+{"service":"orders","level":"ERROR","message":"Coupon 2 rejected: expired","stackTrace":""}
+{"service":"orders","level":"WARN","message":"Slow query 880ms on orders_by_user"}
+{"service":"orders","level":"ERROR","message":"Coupon 3 rejected: expired","stackTrace":""}
+{"service":"orders","level":"WARN","message":"Slow query 920ms on orders_by_user"}
+{"service":"orders","level":"ERROR","message":"Coupon 4 rejected: expired","stackTrace":""}
+{"service":"orders","level":"WARN","message":"Slow query 960ms on orders_by_user"}
+{"service":"orders","level":"ERROR","message":"Coupon 5 rejected: expired","stackTrace":""}
+{"service":"orders","level":"WARN","message":"Slow query 1000ms on orders_by_user"}
+{"service":"orders","level":"ERROR","message":"Coupon 6 rejected: expired","stackTrace":""}
+{"service":"orders","level":"WARN","message":"Slow query 1040ms on orders_by_user"}
